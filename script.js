@@ -11,7 +11,7 @@ function Gameboard() {
     };
 
     const printBoard = () => {
-        console.log(`${getBoard()}`); //try to add 2 line breaks to display proper board.
+        console.log(`${getBoard().slice(0, 3)}\n${getBoard().slice(3, 6)}\n${getBoard().slice(6, 9)}`); //try to add 2 line breaks to display proper board.
     };
 
     return { 
@@ -27,6 +27,7 @@ function GameController() {
     const player2 = Player("AI", 2);
 
     let activePlayer = player1;
+    let winningPlayer;
 
     const getActivePlayer = () => activePlayer;
 
@@ -39,9 +40,24 @@ function GameController() {
         console.log(`${getActivePlayer().name}'s Turn`);
     }
 
+    const checkForWinner = (player) => {
+        winningPlayer = null;
+        if ((board.getBoard().slice(0, 3) || board.getBoard().slice(3, 6) || board.getBoard().slice(6, 9)
+            || board.getBoard()[0] && board.getBoard()[3] && board.getBoard()[6]
+            || board.getBoard()[1] && board.getBoard()[4] && board.getBoard()[7]
+            || board.getBoard()[2] && board.getBoard()[5] && board.getBoard()[8]
+            || board.getBoard()[0] && board.getBoard()[4] && board.getBoard()[8]
+            || board.getBoard()[2] && board.getBoard()[4] && board.getBoard()[6]) == player) {
+                console.log("Rob is winner!");
+                winningPlayer = activePlayer;
+        }
+        
+    }
+
     const playRound = (spot) => {
         console.log("Placing marker");
         board.placeMarker(getActivePlayer().symbol, spot);
+        checkForWinner(getActivePlayer().symbol);
         switchPlayerTurn();
         printNewRound();
     }
