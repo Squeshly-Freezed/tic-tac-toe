@@ -1,3 +1,5 @@
+"use strict"
+
 function Gameboard() {
     const array = [];
     for (let i = 0; i < 9; i++) {
@@ -7,11 +9,15 @@ function Gameboard() {
     const getBoard = () => array.map(index => index.getValue());
 
     const placeMarker = (player, spot) => {
-        if (array[spot] === 0) array[spot].addValue(player);
+        if (array[spot].getValue() === 0) {
+            array[spot].addValue(player);
+        } else {
+            console.log("no placement");
+        }
     };
 
     const printBoard = () => {
-        console.log(`${getBoard().slice(0, 3)}\n${getBoard().slice(3, 6)}\n${getBoard().slice(6, 9)}`); //try to add 2 line breaks to display proper board.
+        console.log(`${getBoard().slice(0, 3)}\n${getBoard().slice(3, 6)}\n${getBoard().slice(6, 9)}`);
     };
 
     return { 
@@ -48,21 +54,26 @@ function GameController() {
             || board.getBoard()[2] && board.getBoard()[5] && board.getBoard()[8]
             || board.getBoard()[0] && board.getBoard()[4] && board.getBoard()[8]
             || board.getBoard()[2] && board.getBoard()[4] && board.getBoard()[6]) == player) {
-                console.log("Rob is winner!");
-                winningPlayer = activePlayer;
+            console.log(`${player} is winner!`);
+            winningPlayer = activePlayer;
         }
         
     }
 
+    const chooseSpot = () => {
+        const spot = parseInt(prompt("Put marker at index: ?"));
+        return spot;
+    }
+
     const playRound = (spot) => {
         console.log("Placing marker");
-        board.placeMarker(getActivePlayer().symbol, spot);
+        board.placeMarker(getActivePlayer().symbol, chooseSpot());
         checkForWinner(getActivePlayer().symbol);
         switchPlayerTurn();
         printNewRound();
     }
 
-    printNewRound();
+    // printNewRound();
 
     return {
         getActivePlayer,
@@ -81,10 +92,10 @@ function Player(name, symbol) {
     };
 }
 
-function Cell(player) {
-    const value = 0;
+function Cell() {
+    let value = 0;
 
-    const addValue = () => value = player;
+    const addValue = (player) => value = player;
     const getValue = () => value;
 
     return {
