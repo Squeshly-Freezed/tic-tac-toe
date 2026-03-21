@@ -39,14 +39,16 @@ function GameController() {
     let winningPlayer;
 
     const getActivePlayer = () => activePlayer;
+    const getWinningPlayer = () => winningPlayer;
 
     const switchPlayerTurn = () => {
         activePlayer = activePlayer === player1 ? player2 : player1;
+        // console.log(`${getActivePlayer().name}'s Turn`);
     }
 
     const printNewRound = () => {
+        // console.log(`${getActivePlayer().name}'s Turn`);
         board.printBoard();
-        console.log(`${getActivePlayer().name}'s Turn`);
     }
 
     const checkForWinner = (player) => {
@@ -72,19 +74,27 @@ function GameController() {
         return spot;
     }
 
-    const playRound = (spot) => {
-        console.log("Start Game");
+    const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    const playRound = async (spot) => {
+        console.log("Start Round");
+        console.log(`${getActivePlayer().name}'s Turn`);
         board.placeMarker(getActivePlayer().symbol, chooseSpot());
+        printNewRound();
         checkForWinner(getActivePlayer().symbol);
+        await wait(3000);
         switchPlayerTurn();
+        console.log(`${getActivePlayer().name}'s Turn`);
         board.placeMarker(getActivePlayer().symbol, computerChooseSpot());
         printNewRound();
+        checkForWinner(getActivePlayer().symbol);
+        switchPlayerTurn();
+        await wait(3000);
     }
-
-    // printNewRound();
 
     return {
         getActivePlayer,
+        getWinningPlayer,
         playRound,
     }
 }
@@ -112,5 +122,9 @@ function Cell() {
     };
 }
 
-const game = GameController();
-game.playRound();
+const run = async () => {
+    const game = GameController();
+    while (!game.getWinningPlayer()) await game.playRound();
+}
+
+run();
