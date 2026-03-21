@@ -7,12 +7,14 @@ function Gameboard() {
     }
 
     const getBoard = () => array.map(index => index.getValue());
+    const getAvailableSpotsOnBoard = () => array.map(index => index.getValue() === 0); // get the indexes of open spots.
 
     const placeMarker = (player, spot) => {
         if (array[spot].getValue() === 0) {
             array[spot].addValue(player);
         } else {
-            console.log("no placement");
+            console.log("retry placement");
+            placeMarker(player, spot === 0 ? 8 : --spot);
         }
     };
 
@@ -22,6 +24,7 @@ function Gameboard() {
 
     return { 
         getBoard,
+        getAvailableSpotsOnBoard,
         placeMarker,
         printBoard,
     };
@@ -57,7 +60,6 @@ function GameController() {
             console.log(`${player} is winner!`);
             winningPlayer = activePlayer;
         }
-        
     }
 
     const chooseSpot = () => {
@@ -65,11 +67,17 @@ function GameController() {
         return spot;
     }
 
+    const computerChooseSpot = () => {
+        const spot = Math.floor(Math.random() * 9);
+        return spot;
+    }
+
     const playRound = (spot) => {
-        console.log("Placing marker");
+        console.log("Start Game");
         board.placeMarker(getActivePlayer().symbol, chooseSpot());
         checkForWinner(getActivePlayer().symbol);
         switchPlayerTurn();
+        board.placeMarker(getActivePlayer().symbol, computerChooseSpot());
         printNewRound();
     }
 
