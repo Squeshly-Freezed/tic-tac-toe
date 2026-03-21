@@ -7,9 +7,14 @@ function Gameboard() {
     }
 
     const getBoard = () => array.map(index => index.getValue());
-    const getAvailableSpotsOnBoard = () => array.map(index => index.getValue() === 0); // get the indexes of open spots.
+
+    const isBoardFull = () => array.every(spot => spot.getValue() !== 0);
 
     const placeMarker = (player, spot) => {
+        if (isBoardFull()) {
+            console.log("Board is full");
+            return;
+        }
         if (array[spot].getValue() === 0) {
             array[spot].addValue(player);
         } else {
@@ -18,13 +23,10 @@ function Gameboard() {
         }
     };
 
-    const printBoard = () => {
-        console.log(`${getBoard().slice(0, 3)}\n${getBoard().slice(3, 6)}\n${getBoard().slice(6, 9)}`);
-    };
+    const printBoard = () => console.log(`${getBoard().slice(0, 3)}\n${getBoard().slice(3, 6)}\n${getBoard().slice(6, 9)}`);
 
     return { 
         getBoard,
-        getAvailableSpotsOnBoard,
         placeMarker,
         printBoard,
     };
@@ -41,15 +43,9 @@ function GameController() {
     const getActivePlayer = () => activePlayer;
     const getWinningPlayer = () => winningPlayer;
 
-    const switchPlayerTurn = () => {
-        activePlayer = activePlayer === player1 ? player2 : player1;
-        // console.log(`${getActivePlayer().name}'s Turn`);
-    }
+    const switchPlayerTurn = () => activePlayer = activePlayer === player1 ? player2 : player1;
 
-    const printNewRound = () => {
-        // console.log(`${getActivePlayer().name}'s Turn`);
-        board.printBoard();
-    }
+    const printNewRound = () => board.printBoard();
 
     const checkForWinner = (player) => {
         winningPlayer = null;
@@ -112,10 +108,8 @@ function Player(name, symbol) {
 
 function Cell() {
     let value = 0;
-
     const addValue = (player) => value = player;
     const getValue = () => value;
-
     return {
         addValue,
         getValue,
