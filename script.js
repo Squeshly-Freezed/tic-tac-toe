@@ -48,15 +48,17 @@ function GameController() {
     const printNewRound = () => board.printBoard();
 
     const checkForWinner = (player) => {
-        winningPlayer = null;
-        if ((board.getBoard().slice(0, 3) || board.getBoard().slice(3, 6) || board.getBoard().slice(6, 9)
-            || board.getBoard()[0] && board.getBoard()[3] && board.getBoard()[6]
-            || board.getBoard()[1] && board.getBoard()[4] && board.getBoard()[7]
-            || board.getBoard()[2] && board.getBoard()[5] && board.getBoard()[8]
-            || board.getBoard()[0] && board.getBoard()[4] && board.getBoard()[8]
-            || board.getBoard()[2] && board.getBoard()[4] && board.getBoard()[6]) == player) {
-            console.log(`${player} is winner!`);
+        const winningCombinations = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+            [0, 4, 8], [2, 4, 6]             // diagonals
+        ];
+        const hasWon = winningCombinations.some(combo => combo.every(index => board.getBoard()[index] === player.symbol));
+        
+        if (hasWon) {
             winningPlayer = activePlayer;
+            console.log(`${player.name} is winner!`);
+            // winningPlayer = activePlayer;
         }
     }
 
@@ -77,15 +79,15 @@ function GameController() {
         console.log(`${getActivePlayer().name}'s Turn`);
         board.placeMarker(getActivePlayer().symbol, chooseSpot());
         printNewRound();
-        checkForWinner(getActivePlayer().symbol);
-        await wait(3000);
+        checkForWinner(getActivePlayer());
+        await wait(2000);
         switchPlayerTurn();
         console.log(`${getActivePlayer().name}'s Turn`);
         board.placeMarker(getActivePlayer().symbol, computerChooseSpot());
         printNewRound();
-        checkForWinner(getActivePlayer().symbol);
+        checkForWinner(getActivePlayer());
         switchPlayerTurn();
-        await wait(3000);
+        await wait(2000);
     }
 
     return {
