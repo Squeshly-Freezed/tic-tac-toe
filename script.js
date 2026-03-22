@@ -58,7 +58,6 @@ function GameController() {
         if (hasWon) {
             winningPlayer = activePlayer;
             console.log(`${player.name} is winner!`);
-            // winningPlayer = activePlayer;
         }
     }
 
@@ -80,14 +79,16 @@ function GameController() {
         board.placeMarker(getActivePlayer().symbol, chooseSpot());
         printNewRound();
         checkForWinner(getActivePlayer());
-        await wait(2000);
+        if (winningPlayer) return;
+        await wait(1200);
         switchPlayerTurn();
         console.log(`${getActivePlayer().name}'s Turn`);
         board.placeMarker(getActivePlayer().symbol, computerChooseSpot());
         printNewRound();
         checkForWinner(getActivePlayer());
+        if (winningPlayer) return;
         switchPlayerTurn();
-        await wait(2000);
+        await wait(1200);
     }
 
     return {
