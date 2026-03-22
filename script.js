@@ -1,6 +1,6 @@
-"use strict"
+"use strict";
 
-function Gameboard() {
+const board = (function Gameboard() {
     const array = [];
     for (let i = 0; i < 9; i++) {
         array.push(Cell());
@@ -27,21 +27,23 @@ function Gameboard() {
 
     return { 
         getBoard,
+        isBoardFull,
         placeMarker,
         printBoard,
     };
-}
+})();
 
-function GameController() {
-    const board = Gameboard();
+const game = (function GameController() {
     const player1 = Player("Rob", 1);
     const player2 = Player("AI", 2);
 
     let activePlayer = player1;
     let winningPlayer;
+    let isDraw = false;
 
     const getActivePlayer = () => activePlayer;
     const getWinningPlayer = () => winningPlayer;
+    const getIsDraw = () => isDraw;
 
     const switchPlayerTurn = () => activePlayer = activePlayer === player1 ? player2 : player1;
 
@@ -54,10 +56,19 @@ function GameController() {
             [0, 4, 8], [2, 4, 6]             // diagonals
         ];
         const hasWon = winningCombinations.some(combo => combo.every(index => board.getBoard()[index] === player.symbol));
-        
+
         if (hasWon) {
             winningPlayer = activePlayer;
             console.log(`${player.name} is winner!`);
+            return;
+        }
+
+        if (board.isBoardFull()) {
+            console.log("The game is a tie.");
+            player1.draws++;
+            player2.draws++;
+            console.log(`Player 1 has: ${player1.draws} draws.`);
+            isDraw = true;
         }
     }
 
@@ -79,14 +90,14 @@ function GameController() {
         board.placeMarker(getActivePlayer().symbol, chooseSpot());
         printNewRound();
         checkForWinner(getActivePlayer());
-        if (winningPlayer) return;
+        if (winningPlayer || isDraw) return;
         await wait(1200);
         switchPlayerTurn();
         console.log(`${getActivePlayer().name}'s Turn`);
         board.placeMarker(getActivePlayer().symbol, computerChooseSpot());
         printNewRound();
         checkForWinner(getActivePlayer());
-        if (winningPlayer) return;
+        if (winningPlayer || isDraw) return;
         switchPlayerTurn();
         await wait(1200);
     }
@@ -94,13 +105,14 @@ function GameController() {
     return {
         getActivePlayer,
         getWinningPlayer,
+        getIsDraw,
         playRound,
     }
-}
+})();
 
 function Player(name, symbol) {
-    const score = 0;
-    const draws = 0;
+    let score = 0;
+    let draws = 0;
     return {
         name,
         symbol,
@@ -120,8 +132,7 @@ function Cell() {
 }
 
 const run = async () => {
-    const game = GameController();
-    while (!game.getWinningPlayer()) await game.playRound();
+    while (!game.getWinningPlayer() && !game.getIsDraw()) await game.playRound();
 }
 
 run();
