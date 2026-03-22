@@ -24,7 +24,7 @@ What I've learned:
 - Writing and learning super clean code through encapsulation (no spaghetti!) thanks to closures within factory functions and IIFE's.
 - using 'strict'
 - array manipulation practice, especially with Array.some & Array.every & Array.map.
-- Trying to implement a Model View Controller architecture. 
+- Trying to implement a Model View Controller architecture where there is a separation of concerns especially between the model and the view.
 - 
 
 My thoughts on the project: 

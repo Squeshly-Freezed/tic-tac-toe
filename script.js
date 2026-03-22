@@ -33,6 +33,15 @@ const board = (function Gameboard() {
     };
 })();
 
+const view = function View() {
+    //create an object that will handle the display/DOM logic. 
+    //Write a function that will render the contents of the gameboard array to the webpage 
+    //Write the functions that allow players to add marks to a specific spot on the board by interacting with 
+    // the appropriate DOM elements
+    //Clean up the interface to allow players to put in their names, include a button to start/restart the game 
+    // and add a display element that shows the results upon game end!
+}
+
 const game = (function GameController() {
     const player1 = Player("Rob", 1);
     const player2 = Player("AI", 2);
