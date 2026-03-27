@@ -10,7 +10,7 @@ const board = (function Gameboard() {
 
     const isBoardFull = () => array.every(spot => spot.getValue() !== 0);
 
-    const placeMarker = (player, spot) => {
+    const placeMarker = (player, spot, isComputer) => {
         if (isBoardFull()) {
             console.log("Board is full");
             return;
@@ -19,17 +19,14 @@ const board = (function Gameboard() {
             array[spot].addValue(player);
         } else {
             console.log("retry placement");
-            placeMarker(player, spot === 0 ? 8 : --spot);
+            placeMarker(player, spot === 0 ? 8 : --spot, isComputer);
         }
     };
-
-    const printBoard = () => console.log(`${getBoard().slice(0, 3)}\n${getBoard().slice(3, 6)}\n${getBoard().slice(6, 9)}`);
 
     return { 
         getBoard,
         isBoardFull,
         placeMarker,
-        printBoard,
     };
 })();
 
@@ -80,8 +77,6 @@ const game = (function GameController() {
 
     const switchPlayerTurn = () => activePlayer = activePlayer === player1 ? player2 : player1;
 
-    const printNewRound = () => board.printBoard();
-
     const checkForWinner = (player) => {
         const winningCombinations = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
@@ -100,14 +95,8 @@ const game = (function GameController() {
             console.log("The game is a tie.");
             player1.draws++;
             player2.draws++;
-            console.log(`Player 1 has: ${player1.draws} draws.`);
             isDraw = true;
         }
-    }
-
-    const chooseSpot = () => {
-        const spot = parseInt(prompt("Put marker at index: ?"));
-        return spot;
     }
 
     const computerChooseSpot = () => {
@@ -115,24 +104,15 @@ const game = (function GameController() {
         return spot;
     }
 
-    const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-    const playRound = async (spot) => {
-        console.log("Start Round");
-        console.log(`${getActivePlayer().name}'s Turn`);
-        board.placeMarker(getActivePlayer().symbol, chooseSpot());
-        printNewRound();
-        checkForWinner(getActivePlayer());
-        if (winningPlayer || isDraw) return;
-        await wait(1200);
-        switchPlayerTurn();
-        console.log(`${getActivePlayer().name}'s Turn`);
-        board.placeMarker(getActivePlayer().symbol, computerChooseSpot());
-        printNewRound();
+    const playRound = (spot) => {
+        board.placeMarker(getActivePlayer().symbol, spot, false);
         checkForWinner(getActivePlayer());
         if (winningPlayer || isDraw) return;
         switchPlayerTurn();
-        await wait(1200);
+        board.placeMarker(getActivePlayer().symbol, computerChooseSpot(), true);
+        checkForWinner(getActivePlayer());
+        if (winningPlayer || isDraw) return;
+        switchPlayerTurn();
     }
 
     return {
@@ -164,13 +144,4 @@ function Cell() {
     };
 }
 
-const run = async () => {
-    // while (!game.getWinningPlayer() && !game.getIsDraw()) {
-    while (!game.getWinningPlayer() && !game.getIsDraw()) {
-        await game.playRound();
-        // ScreenController();
-    }
-}
-
-run();
-// ScreenController();
+ScreenController();
