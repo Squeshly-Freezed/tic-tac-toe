@@ -17,9 +17,11 @@ const board = (function Gameboard() {
         }
         if (array[spot].getValue() === 0) {
             array[spot].addValue(player);
+            return true;
+
         } else {
             console.log("retry placement");
-            placeMarker(player, spot === 0 ? 8 : --spot, isComputer);
+            if (isComputer) placeMarker(player, spot === 0 ? 8 : --spot, isComputer);
         }
     };
 
@@ -105,11 +107,11 @@ const game = (function GameController() {
     }
 
     const playRound = (spot) => {
-        board.placeMarker(getActivePlayer().symbol, spot, false);
+        let hasPlayed = board.placeMarker(getActivePlayer().symbol, spot, false);
         checkForWinner(getActivePlayer());
         if (winningPlayer || isDraw) return;
         switchPlayerTurn();
-        board.placeMarker(getActivePlayer().symbol, computerChooseSpot(), true);
+        if (hasPlayed) board.placeMarker(getActivePlayer().symbol, computerChooseSpot(), true);
         checkForWinner(getActivePlayer());
         if (winningPlayer || isDraw) return;
         switchPlayerTurn();
