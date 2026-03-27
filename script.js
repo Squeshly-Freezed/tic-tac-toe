@@ -6,7 +6,7 @@ const board = (function Gameboard() {
         array.push(Cell());
     }
 
-    const getBoard = () => array.map(index => index.getValue());
+    const getBoard = () => array.map(spot => spot.getValue());
 
     const isBoardFull = () => array.every(spot => spot.getValue() !== 0);
 
@@ -33,13 +33,37 @@ const board = (function Gameboard() {
     };
 })();
 
-const view = function View() {
-    //create an object that will handle the display/DOM logic. 
-    //Write a function that will render the contents of the gameboard array to the webpage 
-    //Write the functions that allow players to add marks to a specific spot on the board by interacting with 
-    // the appropriate DOM elements
-    //Clean up the interface to allow players to put in their names, include a button to start/restart the game 
-    // and add a display element that shows the results upon game end!
+function ScreenController() {
+    const playerTurnDiv = document.querySelector(".player-turn");
+    const player1Div = document.querySelector(".player-1");
+    const player1ScoreDiv = document.querySelector(".player-1-score");
+    const playerDrawsDiv = document.querySelector(".player-draws");
+    const player2ScoreDiv = document.querySelector(".player-2-score");
+    const playerTurnsDiv = document.querySelector(".player-turns");
+    const gameContainerDiv = document.querySelector(".game-container");
+    const startButton = document.querySelector(".start-button");
+    const resetButton = document.querySelector(".reset-button");
+
+    const updateScreen = () => {
+        gameContainerDiv.textContent = "";
+        board.getBoard().forEach((spot, index) => {
+            const button = document.createElement("button");
+            button.classList.add("cell");
+            button.dataset.index = index;
+            button.textContent = spot;
+            gameContainerDiv.appendChild(button);
+        });
+    }
+
+    function clickBoardHandler (e) {
+        const spot = e.target.dataset.index;
+        if (!spot) return;
+        game.playRound(spot);
+        updateScreen();
+    }
+    gameContainerDiv.addEventListener("click", clickBoardHandler);
+
+    updateScreen();
 }
 
 const game = (function GameController() {
@@ -141,7 +165,12 @@ function Cell() {
 }
 
 const run = async () => {
-    while (!game.getWinningPlayer() && !game.getIsDraw()) await game.playRound();
+    // while (!game.getWinningPlayer() && !game.getIsDraw()) {
+    while (!game.getWinningPlayer() && !game.getIsDraw()) {
+        await game.playRound();
+        // ScreenController();
+    }
 }
 
 run();
+// ScreenController();
