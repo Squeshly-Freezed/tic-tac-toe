@@ -1,5 +1,5 @@
 * {
-    border: 1px solid black;
+    border: 1px solid rgb(188, 185, 26);
     box-sizing: border-box;
     font-family: Roboto, sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue';
     text-decoration: none;
@@ -8,25 +8,64 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: rgb(75, 75, 75);
+    background-color: rgb(24, 24, 24);
+    background-image: url(./img/brick-wall.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: white;
 }
 
 .main-container {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: column;
     height: 100dvh;
     cursor: default;
 }
 
-.game-container {
+.top-info-container {
     display: flex;
     flex-wrap: wrap;
+    text-align: center;
+    .player-1-score, .player-2-score, .player-draws {
+        flex: 0 0 33.3%;
+    }
+    .player-1, .player-2{
+        flex: 1 1 50%;
+    }
+}
+
+.center-container {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 30px;
+    .left-picture-container {
+        display: flex;
+    }
+    .game-container {
+        display: flex;
+        flex-wrap: wrap;
+        margin: auto;
+        height: 30vw;
+        aspect-ratio: 1 / 1;
+    }
+    .right-picture-container {
+        display: flex;
+    }
+}
+
+.bottom-info-container {
+    display: flex;
+    justify-content: center
 }
 
 .cell {
-    flex: 0 0 33.3%;
-    height: 100px;
-    /* width: 100px; */
+    flex: 1 1 33.3%;
+    background-color: transparent;
+    opacity: 0.5;
+    color: yellow;
+    font-size: 20px;
 }
 
 .footer {

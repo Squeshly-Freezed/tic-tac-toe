@@ -57,6 +57,7 @@ function ScreenController() {
     function clickBoardHandler (e) {
         const spot = e.target.dataset.index;
         if (!spot) return;
+        if (game.getWinningPlayer() || game.getIsDraw()) return;
         game.playRound(spot);
         updateScreen();
     }
@@ -70,7 +71,7 @@ const game = (function GameController() {
     const player2 = Player("AI", 2);
 
     let activePlayer = player1;
-    let winningPlayer;
+    let winningPlayer = false;
     let isDraw = false;
 
     const getActivePlayer = () => activePlayer;
