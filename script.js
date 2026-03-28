@@ -10,6 +10,8 @@ const board = (function Gameboard() {
 
     const isBoardFull = () => array.every(spot => spot.getValue() !== 0);
 
+    const resetBoard = () => array.forEach(spot => spot.addValue(0));
+
     const placeMarker = (player, spot, isComputer) => {
         if (isBoardFull()) {
             console.log("Board is full");
@@ -28,6 +30,7 @@ const board = (function Gameboard() {
     return { 
         getBoard,
         isBoardFull,
+        resetBoard,
         placeMarker,
     };
 })();
@@ -62,6 +65,13 @@ function ScreenController() {
         updateScreen();
     }
     gameContainerDiv.addEventListener("click", clickBoardHandler);
+
+    function resetButtonHandler () {
+        game.resetGame();
+        updateScreen();
+        console.log("successful reset");
+    }
+    resetButton.addEventListener("click", resetButtonHandler);
 
     updateScreen();
 }
@@ -118,11 +128,19 @@ const game = (function GameController() {
         switchPlayerTurn();
     }
 
+    const resetGame = () => {
+        activePlayer = player1;
+        winningPlayer = false;
+        isDraw = false;
+        board.resetBoard();
+    }
+
     return {
         getActivePlayer,
         getWinningPlayer,
         getIsDraw,
         playRound,
+        resetGame,
     }
 })();
 

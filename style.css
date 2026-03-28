@@ -8,10 +8,11 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: rgb(24, 24, 24);
+    background-color: rgb(0, 0, 0);
     background-image: url(./img/brick-wall.png);
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
     color: white;
 }
 
@@ -21,12 +22,13 @@ body {
     flex-direction: column;
     height: 100dvh;
     cursor: default;
+    text-align: center;
+    padding-top: calc(10vh + 0.5rem);
 }
 
 .top-info-container {
     display: flex;
     flex-wrap: wrap;
-    text-align: center;
     .player-1-score, .player-2-score, .player-draws {
         flex: 0 0 33.3%;
     }
