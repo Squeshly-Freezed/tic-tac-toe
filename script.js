@@ -36,14 +36,12 @@ const board = (function Gameboard() {
 })();
 
 function ScreenController() {
-    const playerTurnDiv = document.querySelector(".player-turn");
     const player1Div = document.querySelector(".player-1");
+    const player2Div = document.querySelector(".player-2");
     const player1ScoreDiv = document.querySelector(".player-1-score");
     const playerDrawsDiv = document.querySelector(".player-draws");
     const player2ScoreDiv = document.querySelector(".player-2-score");
-    const playerTurnsDiv = document.querySelector(".player-turns");
     const gameContainerDiv = document.querySelector(".game-container");
-    const startButton = document.querySelector(".start-button");
     const resetButton = document.querySelector(".reset-button");
 
     const updateScreen = () => {
@@ -55,6 +53,11 @@ function ScreenController() {
             button.textContent = spot;
             gameContainerDiv.appendChild(button);
         });
+        player1Div.textContent = game.player1.name;
+        player2Div.textContent = game.player2.name;
+        player1ScoreDiv.textContent = `Score: ${game.player1.getScore()}`;
+        player2ScoreDiv.textContent = `Score: ${game.player2.getScore()}`;
+        playerDrawsDiv.textContent = `Draws: ${game.player1.getDraws()}`;
     }
 
     function clickBoardHandler (e) {
@@ -100,14 +103,14 @@ const game = (function GameController() {
 
         if (hasWon) {
             winningPlayer = activePlayer;
-            console.log(`${player.name} is winner!`);
+            winningPlayer.increaseScore();
+            console.log("winner");
             return;
         }
 
         if (board.isBoardFull()) {
             console.log("The game is a tie.");
-            player1.draws++;
-            player2.draws++;
+            player1.increaseDraws();
             isDraw = true;
         }
     }
@@ -141,17 +144,25 @@ const game = (function GameController() {
         getIsDraw,
         playRound,
         resetGame,
+        player1,
+        player2,
     }
 })();
 
 function Player(name, symbol) {
     let score = 0;
     let draws = 0;
+    const getScore = () => score;
+    const getDraws = () => draws;
+    const increaseScore = () => ++score;
+    const increaseDraws = () => ++draws;
     return {
         name,
         symbol,
-        score,
-        draws,
+        getScore,
+        getDraws,
+        increaseScore,
+        increaseDraws,
     };
 }
 

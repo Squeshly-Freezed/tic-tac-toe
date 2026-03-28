@@ -23,12 +23,19 @@ body {
     height: 100dvh;
     cursor: default;
     text-align: center;
+    font-size: calc(1vw + 0.5rem);
+    text-shadow: 0px 0px 10px pink;
     padding-top: calc(10vh + 0.5rem);
+}
+
+.header {
+    font-size: calc(2vw + 0.5rem);
 }
 
 .top-info-container {
     display: flex;
     flex-wrap: wrap;
+    margin: 20px;
     .player-1-score, .player-2-score, .player-draws {
         flex: 0 0 33.3%;
     }
@@ -51,6 +58,13 @@ body {
         margin: auto;
         height: 30vw;
         aspect-ratio: 1 / 1;
+        border: 2px solid pink;
+        border-radius: 6px;
+        box-shadow: 0px 0px 15px 2px blue,
+                    0px 0px 500px 1px blue,
+                    0px 0px 5px 5px pink,
+                    0px 0px 1000px 0px pink,
+                    inset 0px 0px 100px 0px pink;
     }
     .right-picture-container {
         display: flex;
@@ -59,15 +73,22 @@ body {
 
 .bottom-info-container {
     display: flex;
-    justify-content: center
+    justify-content: center;
+    margin-top: 2vh;
+    .reset-button {
+        all: unset;
+        cursor: pointer;
+    }
 }
 
 .cell {
     flex: 1 1 33.3%;
     background-color: transparent;
-    opacity: 0.5;
     color: yellow;
-    font-size: 20px;
+    border: 2px solid pink;
+    border-radius: 6px;
+    box-shadow: 0px 0px 5px 5px pink;
+    cursor: pointer;
 }
 
 .footer {

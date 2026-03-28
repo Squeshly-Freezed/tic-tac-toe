@@ -28,3 +28,5 @@ What I've learned:
 - 
 
 My thoughts on the project: 
+
+Things to add: I'd love to improve the intelligence of the AI opponent through using a search technique so the opponent can actively block the player.
