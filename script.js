@@ -43,6 +43,9 @@ function ScreenController() {
     const player2ScoreDiv = document.querySelector(".player-2-score");
     const gameContainerDiv = document.querySelector(".game-container");
     const resetButton = document.querySelector(".reset-button");
+    const svgBorder1 = document.querySelector(".player-1-container .svg-border");
+    const svgBorder2 = document.querySelector(".player-2-container .svg-border");
+
 
     const updateScreen = () => {
         gameContainerDiv.textContent = "";
@@ -50,14 +53,29 @@ function ScreenController() {
             const button = document.createElement("button");
             button.classList.add("cell");
             button.dataset.index = index;
-            button.textContent = spot;
+            if (spot === 1) {
+                button.innerHTML = `
+                    <svg viewBox="0 0 100 100" width="100%" height="100%" style="position:absolute; top:0; left:0;">
+                        <text class="marker markerX" x="50" y="50" fill="red" text-anchor="middle" 
+                        dominant-baseline="middle" font-size="50">X</text>
+                    </svg>`;
+            } else if (spot === 2) {
+                button.innerHTML = `
+                    <svg viewBox="0 0 100 100" width="100%" height="100%" style="position:absolute; top:0; left:0;">
+                        <text class="marker markerO" x="50" y="50" fill="cyan" text-anchor="middle" 
+                        dominant-baseline="middle" font-size="50">O</text>
+                    </svg>`;
+            }
             gameContainerDiv.appendChild(button);
         });
-        player1Div.textContent = game.player1.name;
-        player2Div.textContent = game.player2.name;
-        player1ScoreDiv.textContent = `Score: ${game.player1.getScore()}`;
-        player2ScoreDiv.textContent = `Score: ${game.player2.getScore()}`;
-        playerDrawsDiv.textContent = `Draws: ${game.player1.getDraws()}`;
+        player1Div.textContent = game.getPlayer1().name;
+        player2Div.textContent = game.getPlayer2().name;
+        player1ScoreDiv.textContent = `SCORE: ${game.getPlayer1().getScore()}`;
+        player2ScoreDiv.textContent = `SCORE: ${game.getPlayer2().getScore()}`;
+        playerDrawsDiv.textContent = `TIES: ${game.getPlayer1().getDraws()}`;
+        const isPlayer1Turn = game.getActivePlayer() === game.player1;
+        svgBorder1.style.animationPlayState = isPlayer1Turn ? "running" : "paused";
+        svgBorder2.style.animationPlayState = isPlayer1Turn ? "paused" : "running";
     }
 
     function clickBoardHandler (e) {
@@ -90,6 +108,9 @@ const game = (function GameController() {
     const getActivePlayer = () => activePlayer;
     const getWinningPlayer = () => winningPlayer;
     const getIsDraw = () => isDraw;
+    const getPlayer1 = () => player1;
+    const getPlayer2 = () => player2;
+    
 
     const switchPlayerTurn = () => activePlayer = activePlayer === player1 ? player2 : player1;
 
@@ -144,8 +165,8 @@ const game = (function GameController() {
         getIsDraw,
         playRound,
         resetGame,
-        player1,
-        player2,
+        getPlayer1,
+        getPlayer2,
     }
 })();
 
