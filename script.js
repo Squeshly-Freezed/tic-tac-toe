@@ -24,6 +24,7 @@ const board = (function Gameboard() {
         } else {
             console.log("retry placement");
             if (isComputer) return placeMarker(player, spot === 0 ? 8 : --spot, isComputer);
+            return false;
         }
     };
 
@@ -79,22 +80,32 @@ function ScreenController() {
         svgBorder2.style.animationPlayState = isPlayer2Turn ? "running" : "paused";
     }
 
+    let isPlayerTurn = true;
     const clickBoardHandler = async (e) => {
+        if (!isPlayerTurn) return;
         const spot = e.target.dataset.index;
         if (!spot) return;
         if (game.getWinningPlayer() || game.getIsDraw()) return;
-        game.playerTurn(spot);
+        isPlayerTurn = false;
+        const hasPlayed = game.playerTurn(spot);
+        if (!hasPlayed) {
+            isPlayerTurn = true;
+            return;
+        }
         updateScreen();
-        if (game.getWinningPlayer() || game.getIsDraw()) return;
-        gameContainerDiv.removeEventListener("click", clickBoardHandler);
+        if (game.getWinningPlayer() || game.getIsDraw()) {
+            isPlayerTurn = true;
+            return;
+        }
         await game.computerTurn();
         updateScreen();
-        gameContainerDiv.addEventListener("click", clickBoardHandler);
+        isPlayerTurn = true;
     }
     gameContainerDiv.addEventListener("click", clickBoardHandler);
 
     function resetButtonHandler () {
         game.resetGame();
+        isPlayerTurn = true;
         updateScreen();
         console.log("successful reset");
     }
@@ -112,6 +123,7 @@ const game = (function GameController() {
     let activePlayer = player1;
     let winningPlayer = false;
     let isDraw = false;
+    let turnToken = 0;
 
     const getActivePlayer = () => activePlayer;
     const getWinningPlayer = () => winningPlayer;
@@ -153,15 +165,19 @@ const game = (function GameController() {
 
     const playerTurn = (spot) => {
         let hasPlayed = board.placeMarker(getActivePlayer().symbol, spot, false);
-        checkForWinner(getActivePlayer());
-        if (winningPlayer || isDraw) return;
-        switchPlayerTurn();
+        if (hasPlayed) {
+            checkForWinner(getActivePlayer());
+            if (winningPlayer || isDraw) return;
+            switchPlayerTurn();
+        }
         return hasPlayed;
     }
 
     const computerTurn = async () => {
+        const myToken = ++turnToken;
         if (playerTurn) {
             await delay(1500 + Math.random() * 1000);
+            if (myToken !== turnToken) return;
             board.placeMarker(getActivePlayer().symbol, computerChooseSpot(), true);
             checkForWinner(getActivePlayer());
             if (winningPlayer || isDraw) return;
@@ -170,6 +186,7 @@ const game = (function GameController() {
     }
 
     const resetGame = () => {
+        turnToken++;
         activePlayer = player1;
         winningPlayer = false;
         isDraw = false;
