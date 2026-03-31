@@ -86,8 +86,10 @@ function ScreenController() {
         game.playerTurn(spot);
         updateScreen();
         if (game.getWinningPlayer() || game.getIsDraw()) return;
+        gameContainerDiv.removeEventListener("click", clickBoardHandler);
         await game.computerTurn();
         updateScreen();
+        gameContainerDiv.addEventListener("click", clickBoardHandler);
     }
     gameContainerDiv.addEventListener("click", clickBoardHandler);
 
@@ -97,6 +99,8 @@ function ScreenController() {
         console.log("successful reset");
     }
     resetButton.addEventListener("click", resetButtonHandler);
+
+    window.addEventListener("contextmenu", (e) => e.preventDefault());
 
     updateScreen();
 }
@@ -147,7 +151,7 @@ const game = (function GameController() {
 
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-    const playerTurn = async (spot) => {
+    const playerTurn = (spot) => {
         let hasPlayed = board.placeMarker(getActivePlayer().symbol, spot, false);
         checkForWinner(getActivePlayer());
         if (winningPlayer || isDraw) return;
