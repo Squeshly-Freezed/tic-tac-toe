@@ -167,8 +167,7 @@ const game = (function GameController() {
         let hasPlayed = board.placeMarker(getActivePlayer().symbol, spot, false);
         if (hasPlayed) {
             checkForWinner(getActivePlayer());
-            if (winningPlayer || isDraw) return;
-            switchPlayerTurn();
+            if (!winningPlayer && !isDraw) switchPlayerTurn();
         }
         return hasPlayed;
     }
