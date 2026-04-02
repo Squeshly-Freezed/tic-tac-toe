@@ -57,7 +57,7 @@ function ScreenController() {
             if (spot === 1) {
                 button.innerHTML = `
                     <svg viewBox="0 0 100 100" width="100%" height="100%" style="position:absolute; top:0; left:0;">
-                        <text class="marker markerX" x="50" y="50" fill="red" text-anchor="middle" 
+                        <text class="marker markerX" x="50" y="50" fill="white" text-anchor="middle" 
                         dominant-baseline="middle" font-size="50">X</text>
                     </svg>`;
             } else if (spot === 2) {
@@ -174,14 +174,12 @@ const game = (function GameController() {
 
     const computerTurn = async () => {
         const myToken = ++turnToken;
-        if (playerTurn) {
-            await delay(1500 + Math.random() * 1000);
-            if (myToken !== turnToken) return;
-            board.placeMarker(getActivePlayer().symbol, computerChooseSpot(), true);
-            checkForWinner(getActivePlayer());
-            if (winningPlayer || isDraw) return;
-            switchPlayerTurn();
-        }
+        await delay(1500 + Math.random() * 1000);
+        if (myToken !== turnToken) return;
+        board.placeMarker(getActivePlayer().symbol, computerChooseSpot(), true);
+        checkForWinner(getActivePlayer());
+        if (winningPlayer || isDraw) return;
+        switchPlayerTurn();
     }
 
     const resetGame = () => {

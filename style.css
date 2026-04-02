@@ -56,8 +56,8 @@ body {
         position: relative;
         white-space: nowrap;
         overflow: hidden;
-        padding-top: 20px;
-        padding-bottom: 20px;
+        padding-top: clamp(3px, 1.5dvh, 20px);
+        padding-bottom: clamp(3px, 1.5dvh, 20px);
     }
     .svg-border {
         position: absolute;
@@ -107,19 +107,26 @@ body {
 }
 
 .markerX {
-    filter: drop-shadow(0px 0px 14px rgb(255, 0, 0))
-            drop-shadow(0px 0px 2px rgb(206, 134, 0));
+    filter: drop-shadow(0px 0px 5px rgb(255, 0, 0))
+            drop-shadow(0px 0px 22px red)
+            drop-shadow(0px 0px 2px red);
+    stroke: red;
+    stroke-width: 2.5px;
+    
 }
 .markerO {
-    filter: drop-shadow(0px 0px 14px rgb(0, 255, 234))
-            drop-shadow(0px 0px 2px white);
+    filter: drop-shadow(0px 0px 5px cyan)
+            drop-shadow(0px 0px 22px rgb(0, 255, 234))
+            drop-shadow(0px 0px 2px cyan);
+    stroke: cyan;
+    stroke-width: 2px;
 }
 
 .bottom-info-container {
     display: flex;
     justify-content: center;
-    margin-top: clamp(0.1rem, 1dvh, 2rem);
-    margin-bottom: clamp(0.1rem, 1dvh, 2rem);
+    margin-top: clamp(1rem, 4dvh, 4rem);
+    margin-bottom: clamp(1rem, 5dvh, 4rem);
     .reset-button {
         all: unset;
         cursor: pointer;
@@ -155,23 +162,12 @@ body {
         height: clamp(15px, 3dvh, 40px);
     } 
 }
-/* 
-@media (max-width: 600px) {
-    .top-info-container {
-        padding: 0vw;
-    }
-}
-@media (max-height: 850px) {
-    .top-info-container, .header { 
-        padding: 1rem;
-        margin: 0vw;
-    }
-} */
+
 @media (max-height: 400px) {
     .top-info-container {
         display: none;
     }
-    .reset-button {
-        padding: 4px;  /*fix this*/
+    .bottom-info-container .reset-button {
+        padding: 4px;
     }
 }
