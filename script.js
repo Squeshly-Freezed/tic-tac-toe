@@ -48,9 +48,6 @@ function ScreenController() {
     const svgBorder2 = document.querySelector(".player-2-container .svg-border");
     const nameDialog = document.querySelector(".name-dialog");
     const name = document.querySelector("#name");
-    const closeDialog = document.querySelector(".close-dialog");
-    
-
 
     const updateScreen = () => {
         gameContainerDiv.textContent = "";
@@ -58,7 +55,18 @@ function ScreenController() {
             const button = document.createElement("button");
             button.classList.add("cell");
             button.dataset.index = index;
-            if (spot === 1) {
+            if (spot === 0) {
+                button.addEventListener("mouseover", () => {
+                    button.innerHTML = `
+                    <svg viewBox="0 0 100 100" width="100%" height="100%" style="position:absolute; top:0; left:0; pointer-events:none";>
+                        <text class="marker marker0" x="50" y="50" fill="grey" text-anchor="middle" 
+                        dominant-baseline="middle" font-size="80">x</text>
+                    </svg>`;
+                });
+                button.addEventListener("mouseout", () => {
+                        button.innerHTML = "";
+                });
+            } else if (spot === 1) {
                 button.innerHTML = `
                     <svg viewBox="0 0 100 100" width="100%" height="100%" style="position:absolute; top:0; left:0;">
                         <text class="marker markerX" x="50" y="50" fill="white" text-anchor="middle" 
@@ -118,8 +126,6 @@ function ScreenController() {
     }
     resetButton.addEventListener("click", resetButtonHandler);
 
-    window.addEventListener("contextmenu", (e) => e.preventDefault());
-
     nameDialog.addEventListener("cancel", (e) => e.preventDefault());
     nameDialog.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && nameDialog.open) e.preventDefault();
@@ -127,8 +133,9 @@ function ScreenController() {
     nameDialog.addEventListener("submit", () => {
         player1Div.textContent = name.value;
     });
-    nameDialog.showModal();
-    
+    // nameDialog.showModal();
+    window.addEventListener("contextmenu", (e) => e.preventDefault());
+
     updateScreen();
 }
 
