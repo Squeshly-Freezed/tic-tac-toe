@@ -58,13 +58,13 @@ function ScreenController() {
                 button.innerHTML = `
                     <svg viewBox="0 0 100 100" width="100%" height="100%" style="position:absolute; top:0; left:0;">
                         <text class="marker markerX" x="50" y="50" fill="white" text-anchor="middle" 
-                        dominant-baseline="middle" font-size="50">X</text>
+                        dominant-baseline="middle" font-size="80">x</text>
                     </svg>`;
             } else if (spot === 2) {
                 button.innerHTML = `
                     <svg viewBox="0 0 100 100" width="100%" height="100%" style="position:absolute; top:0; left:0;">
-                        <text class="marker markerO" x="50" y="50" fill="cyan" text-anchor="middle" 
-                        dominant-baseline="middle" font-size="50">O</text>
+                        <text class="marker markerO" x="50" y="50" fill="white" text-anchor="middle" 
+                        dominant-baseline="middle" font-size="80">o</text>
                     </svg>`;
             }
             gameContainerDiv.appendChild(button);
@@ -72,6 +72,10 @@ function ScreenController() {
         player1Div.textContent = game.getPlayer1().name;
         player2Div.textContent = game.getPlayer2().name;
         player1ScoreDiv.textContent = `SCORE: ${game.getPlayer1().getScore()}`;
+        // if (game.checkForWinner(game.getActivePlayer())) {
+        // player1ScoreDiv.textContent = `SCORE: ${game.getPlayer1().getScore()} + 1`;
+        // console.log("added 1 to score");
+        // }
         player2ScoreDiv.textContent = `SCORE: ${game.getPlayer2().getScore()}`;
         playerDrawsDiv.textContent = `TIES: ${game.getPlayer1().getDraws()}`;
         const isPlayer1Turn = game.getActivePlayer() === game.getPlayer1();
@@ -146,7 +150,7 @@ const game = (function GameController() {
             winningPlayer = activePlayer;
             winningPlayer.increaseScore();
             console.log("winner");
-            return;
+            return true;
         }
 
         if (board.isBoardFull()) {
@@ -199,6 +203,7 @@ const game = (function GameController() {
         resetGame,
         getPlayer1,
         getPlayer2,
+        checkForWinner,
     }
 })();
 
