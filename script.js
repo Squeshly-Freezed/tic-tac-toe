@@ -46,6 +46,10 @@ function ScreenController() {
     const resetButton = document.querySelector(".reset-button");
     const svgBorder1 = document.querySelector(".player-1-container .svg-border");
     const svgBorder2 = document.querySelector(".player-2-container .svg-border");
+    const nameDialog = document.querySelector(".name-dialog");
+    const name = document.querySelector("#name");
+    const closeDialog = document.querySelector(".close-dialog");
+    
 
 
     const updateScreen = () => {
@@ -69,7 +73,6 @@ function ScreenController() {
             }
             gameContainerDiv.appendChild(button);
         });
-        player1Div.textContent = game.getPlayer1().name;
         player2Div.textContent = game.getPlayer2().name;
         player1ScoreDiv.textContent = `SCORE: ${game.getPlayer1().getScore()}`;
         // if (game.checkForWinner(game.getActivePlayer())) {
@@ -117,6 +120,15 @@ function ScreenController() {
 
     window.addEventListener("contextmenu", (e) => e.preventDefault());
 
+    nameDialog.addEventListener("cancel", (e) => e.preventDefault());
+    nameDialog.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && nameDialog.open) e.preventDefault();
+    });
+    nameDialog.addEventListener("submit", () => {
+        player1Div.textContent = name.value;
+    });
+    nameDialog.showModal();
+    
     updateScreen();
 }
 
