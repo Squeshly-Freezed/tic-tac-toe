@@ -35,6 +35,3 @@ Things to add: I'd love to improve the intelligence of the AI opponent through u
 
 -score/ties++ animation
 -AI logic
--win line implementation
--board hover grey marker?
--dialog box for name input

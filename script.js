@@ -100,7 +100,14 @@ function ScreenController() {
         if (!isPlayerTurn) return;
         const spot = e.target.dataset.index;
         if (!spot) return;
-        if (game.getWinningPlayer() || game.getIsDraw()) return;
+        if (game.getWinningPlayer()) {
+            scoreAnimation(game.getWinningPlayer() === game.getPlayer1 ? player1ScoreDiv : player2ScoreDiv);
+            return; //add +1 animation
+        }
+        if (game.getIsDraw()) {
+            scoreAnimation(playerDrawsDiv);
+            return; //add +1 animation
+        }
         isPlayerTurn = false;
         const hasPlayed = game.playerTurn(spot);
         if (!hasPlayed) {
@@ -108,9 +115,14 @@ function ScreenController() {
             return;
         }
         updateScreen();
-        if (game.getWinningPlayer() || game.getIsDraw()) {
+        if (game.getWinningPlayer()) { // add +1 animation
             isPlayerTurn = true;
+            scoreAnimation(game.getWinningPlayer() === game.getPlayer1 ? player1ScoreDiv : player2ScoreDiv);
             return;
+        }
+        if (game.getIsDraw()) {
+            scoreAnimation(playerDrawsDiv);
+            return; //add +1 animation
         }
         await game.computerTurn();
         updateScreen();
@@ -125,6 +137,16 @@ function ScreenController() {
         console.log("successful reset");
     }
     resetButton.addEventListener("click", resetButtonHandler);
+
+    function scoreAnimation (div) {
+        const scoreAnimation = document.createElement("span");
+        scoreAnimation.textContent = "+ 1";
+        scoreAnimation.classList.add("score-animation");
+        scoreAnimation.addEventListener("animationend", () => {
+            scoreAnimation.remove();
+        })
+        div.appendChild(scoreAnimation);
+    }
 
     nameDialog.addEventListener("cancel", (e) => e.preventDefault());
     nameDialog.addEventListener("keydown", (e) => {

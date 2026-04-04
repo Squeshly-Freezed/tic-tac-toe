@@ -104,11 +104,34 @@ body {
     }
 }
 
+.score-animation {
+    color: yellow;
+    animation: fade-out 2.0s linear;
+    font-size: clamp(0.8rem, 3vw + 0.5rem, 3rem);
+    position: absolute;
+    text-shadow: 0px 0px 5px yellow;
+    padding-left: 5px;
+}
+
+@keyframes fade-out {
+    0% {
+        transform: scale(1.5) translateY(0px);
+        opacity: 1.0;
+    }
+    50% {
+        transform: scale(1.25) translateY(-10px);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1.0) translateY(-20px);
+        opacity: 0.0;
+    }
+}
+
 .center-container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    flex: 1 1 auto;
+    align-items: center;    flex: 1 1 auto;
     min-height: 0;
     .game-container {
         position: relative;
