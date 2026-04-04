@@ -33,5 +33,4 @@ Things to add: I'd love to improve the intelligence of the AI opponent through u
 
 
 
--score/ties++ animation
 -AI logic

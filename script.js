@@ -164,6 +164,12 @@ const game = (function GameController() {
     let isDraw = false;
     let turnToken = 0;
 
+    const winningCombinations = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+        [0, 4, 8], [2, 4, 6]             // diagonals
+    ];
+
     const getActivePlayer = () => activePlayer;
     const getWinningPlayer = () => winningPlayer;
     const getIsDraw = () => isDraw;
@@ -174,11 +180,6 @@ const game = (function GameController() {
     const switchPlayerTurn = () => activePlayer = activePlayer === player1 ? player2 : player1;
 
     const checkForWinner = (player) => {
-        const winningCombinations = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-            [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-            [0, 4, 8], [2, 4, 6]             // diagonals
-        ];
         const hasWon = winningCombinations.some(combo => combo.every(index => board.getBoard()[index] === player.symbol));
 
         if (hasWon) {
@@ -198,6 +199,25 @@ const game = (function GameController() {
         return spot;
     }
 
+    const computerBlockSpot = () => {
+        const needsBlocking = winningCombinations.filter(combo => combo.filter(index => board.getBoard()[index] === 1).length === 2).map(combo => combo.find(index => board.getBoard()[index] === 0)).filter(index => index !== undefined);
+        return needsBlocking[0];
+    }
+
+    // const computerFillSpot = () => {
+        
+    // }
+
+    const computerPlayStrategy = () => {
+        const needsBlocking = computerBlockSpot();
+        if (needsBlocking !== undefined) {
+            console.log("tried to block");
+            return needsBlocking;
+        }
+        console.log("making default move");
+        return computerChooseSpot();
+    }
+
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     const playerTurn = (spot) => {
@@ -213,7 +233,8 @@ const game = (function GameController() {
         const myToken = ++turnToken;
         await delay(1500 + Math.random() * 1000);
         if (myToken !== turnToken) return;
-        board.placeMarker(getActivePlayer().symbol, computerChooseSpot(), true);
+        board.placeMarker(getActivePlayer().symbol, computerPlayStrategy(), true);
+        // board.placeMarker(getActivePlayer().symbol, computerChooseSpot(), true);
         checkForWinner(getActivePlayer());
         if (winningPlayer || isDraw) return;
         switchPlayerTurn();
