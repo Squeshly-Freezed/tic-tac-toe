@@ -70,7 +70,8 @@ body {
     .player-1-score, .player-2-score, .player-draws {
         flex: 0 0 33.3%;
         white-space: nowrap;
-        overflow: hidden;
+        overflow: visible;
+        position: relative;
         padding-top: clamp(3px, 1.5dvh, 20px);
         padding-bottom: clamp(3px, 1.5dvh, 20px);
     }
@@ -105,6 +106,7 @@ body {
 }
 
 .score-animation {
+    z-index: 1;
     color: yellow;
     animation: fade-out 2.0s linear;
     font-size: clamp(0.8rem, 3vw + 0.5rem, 3rem);

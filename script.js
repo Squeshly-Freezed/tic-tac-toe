@@ -14,7 +14,6 @@ const board = (function Gameboard() {
 
     const placeMarker = (player, spot, isComputer) => {
         if (isBoardFull()) {
-            console.log("Board is full");
             return false;
         }
         if (array[spot].getValue() === 0) {
@@ -22,7 +21,6 @@ const board = (function Gameboard() {
             return true;
 
         } else {
-            console.log("retry placement");
             if (isComputer) return placeMarker(player, spot === 0 ? 8 : --spot, isComputer);
             return false;
         }
@@ -83,10 +81,6 @@ function ScreenController() {
         });
         player2Div.textContent = game.getPlayer2().name;
         player1ScoreDiv.textContent = `SCORE: ${game.getPlayer1().getScore()}`;
-        // if (game.checkForWinner(game.getActivePlayer())) {
-        // player1ScoreDiv.textContent = `SCORE: ${game.getPlayer1().getScore()} + 1`;
-        // console.log("added 1 to score");
-        // }
         player2ScoreDiv.textContent = `SCORE: ${game.getPlayer2().getScore()}`;
         playerDrawsDiv.textContent = `TIES: ${game.getPlayer1().getDraws()}`;
         const isPlayer1Turn = game.getActivePlayer() === game.getPlayer1();
@@ -100,14 +94,7 @@ function ScreenController() {
         if (!isPlayerTurn) return;
         const spot = e.target.dataset.index;
         if (!spot) return;
-        if (game.getWinningPlayer()) {
-            scoreAnimation(game.getWinningPlayer() === game.getPlayer1 ? player1ScoreDiv : player2ScoreDiv);
-            return; //add +1 animation
-        }
-        if (game.getIsDraw()) {
-            scoreAnimation(playerDrawsDiv);
-            return; //add +1 animation
-        }
+        if (game.getWinningPlayer() || game.getIsDraw()) return;
         isPlayerTurn = false;
         const hasPlayed = game.playerTurn(spot);
         if (!hasPlayed) {
@@ -115,17 +102,25 @@ function ScreenController() {
             return;
         }
         updateScreen();
-        if (game.getWinningPlayer()) { // add +1 animation
+        if (game.getWinningPlayer()) {
             isPlayerTurn = true;
-            scoreAnimation(game.getWinningPlayer() === game.getPlayer1 ? player1ScoreDiv : player2ScoreDiv);
+            scoreAnimation(game.getWinningPlayer() === game.getPlayer1() ? player1ScoreDiv : player2ScoreDiv);
             return;
         }
         if (game.getIsDraw()) {
             scoreAnimation(playerDrawsDiv);
-            return; //add +1 animation
+            return;
         }
         await game.computerTurn();
         updateScreen();
+        if (game.getWinningPlayer()) {
+            scoreAnimation(game.getWinningPlayer() === game.getPlayer1() ? player1ScoreDiv : player2ScoreDiv);
+            return;
+        }
+        if (game.getIsDraw()) {
+            scoreAnimation(playerDrawsDiv);
+            return;
+        }
         isPlayerTurn = true;
     }
     gameContainerDiv.addEventListener("click", clickBoardHandler);
@@ -134,7 +129,6 @@ function ScreenController() {
         game.resetGame();
         isPlayerTurn = true;
         updateScreen();
-        console.log("successful reset");
     }
     resetButton.addEventListener("click", resetButtonHandler);
 
@@ -190,12 +184,10 @@ const game = (function GameController() {
         if (hasWon) {
             winningPlayer = activePlayer;
             winningPlayer.increaseScore();
-            console.log("winner");
             return true;
         }
 
         if (board.isBoardFull()) {
-            console.log("The game is a tie.");
             player1.increaseDraws();
             isDraw = true;
         }
