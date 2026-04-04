@@ -149,7 +149,7 @@ function ScreenController() {
     nameDialog.addEventListener("submit", () => {
         player1Div.textContent = name.value;
     });
-    // nameDialog.showModal();
+    nameDialog.showModal();
     window.addEventListener("contextmenu", (e) => e.preventDefault());
 
     updateScreen();
@@ -199,26 +199,22 @@ const game = (function GameController() {
         return spot;
     }
 
-    const computerBlockSpot = () => {
-        const needsBlocking = winningCombinations.filter(combo => combo.filter(index => board.getBoard()[index] === 1).length === 2).map(combo => combo.find(index => board.getBoard()[index] === 0)).filter(index => index !== undefined);
-        return needsBlocking[0];
+    const computerAttackOrDefend = (tactic) => {
+        const indexesToTactic = winningCombinations.filter(combo => combo.filter(index => board.getBoard()[index] === tactic).length === 2).map(combo => combo.find(index => board.getBoard()[index] === 0)).filter(index => index !== undefined);
+        return indexesToTactic[0];
     }
-
-    // const computerFillSpot = () => {
-        
-    // }
 
     const computerPlayStrategy = () => {
-        const needsBlocking = computerBlockSpot();
+        const needsAttacking = computerAttackOrDefend(getPlayer2().symbol);
+        if (needsAttacking !== undefined) {
+            return needsAttacking;
+        }
+        const needsBlocking = computerAttackOrDefend(getPlayer1().symbol);
         if (needsBlocking !== undefined) {
-            console.log("tried to block");
             return needsBlocking;
         }
-        console.log("making default move");
         return computerChooseSpot();
     }
-
-    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     const playerTurn = (spot) => {
         let hasPlayed = board.placeMarker(getActivePlayer().symbol, spot, false);
@@ -229,12 +225,12 @@ const game = (function GameController() {
         return hasPlayed;
     }
 
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     const computerTurn = async () => {
         const myToken = ++turnToken;
         await delay(1500 + Math.random() * 1000);
         if (myToken !== turnToken) return;
         board.placeMarker(getActivePlayer().symbol, computerPlayStrategy(), true);
-        // board.placeMarker(getActivePlayer().symbol, computerChooseSpot(), true);
         checkForWinner(getActivePlayer());
         if (winningPlayer || isDraw) return;
         switchPlayerTurn();
